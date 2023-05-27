@@ -406,6 +406,7 @@ const passwordRecovery = async (req, res) => {
       const user = await User.findOne({"email": email})
       if (user) {
             const tokenNormal = jwt.sign({ user }, passwordTokenSecret, { expiresIn: "1h" })
+            const token = encodeURIComponent(tokenNormal);
             let transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",
                 port: 465,
@@ -448,7 +449,8 @@ const changePassword = async (req, res) => {
     try {
       const { token, password } = req.body;
   
-    const { user } = jwt.verify(token, passwordTokenSecret);
+    const decodedToken = decodeURIComponent(token);
+    const { user } = jwt.verify(decodedToken, passwordTokenSecret);
     const { _id } = user;
     await User.findByIdAndUpdate(_id, { 
         password 
