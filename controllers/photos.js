@@ -59,11 +59,9 @@ const getPhoto = async (req, res) => {
       return res.status(401).json({ message: 'No se encontró el token.' });
     } else {
 
-    const decodedToken = jwt.verify(token, userTokenSecret);
-    const { user: userToken } = decodedToken;
-    const { _id } = userToken;
+    const { userId } = jwt.verify(token, userTokenSecret);
 
-    const user = await User.findById(_id);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'El usuario no existe.' });
     } else {
