@@ -27,12 +27,10 @@ const getUserEspecifico = async (req, res) => {
         return res.status(401).json({ message: 'No se encontró el token.' });
       }
   
-      const decodedToken = jwt.verify(token, userTokenSecret);
-      const { user: userToken } = decodedToken;
-      const { _id } = userToken;
+      const { userId } = jwt.verify(token, userTokenSecret);
   
       try {
-        const user = await User.findById(_id);
+        const user = await User.findById(userId);
         if (!user) {
           return res.status(404).json({ message: 'El usuario no existe.' });
         }
@@ -78,11 +76,11 @@ const loginUser = async (req, res) => {
       const user = await User.findOne({ email });
       if (user) {
         if (password === user.password && user.role === 'admin') {
-          const adminToken = jwt.sign({ user }, adminTokenSecret, { expiresIn: '1d' });
-          const token = jwt.sign({ user }, userTokenSecret, { expiresIn: '7d' });
+          const adminToken = jwt.sign({ userId: user._id }, adminTokenSecret, { expiresIn: '1d' });
+          const token = jwt.sign({ userId: user._id }, userTokenSecret, { expiresIn: '7d' });
           return res.status(200).json({ adminToken, token });
         } else if (password === user.password) {
-          const token = jwt.sign({ user }, userTokenSecret, { expiresIn: '7d' });
+          const token = jwt.sign({ userId: user._id }, userTokenSecret, { expiresIn: '7d' });
           return res.status(200).json({ token });
         } else {
           return res.status(206).json({ message: 'Datos incorrectos.' });
@@ -405,7 +403,7 @@ const passwordRecovery = async (req, res) => {
   
       const user = await User.findOne({"email": email})
       if (user) {
-            const tokenNormal = jwt.sign({ user }, passwordTokenSecret, { expiresIn: "1h" })
+            const tokenNormal = jwt.sign({ userId: user._id }, passwordTokenSecret, { expiresIn: "1h" })
             const token = encodeURIComponent(tokenNormal);
             let transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",
@@ -449,12 +447,11 @@ const changePassword = async (req, res) => {
     try {
       const { token, password } = req.body;
   
-    const decodedToken = decodeURIComponent(token);
-    const { user } = jwt.verify(decodedToken, passwordTokenSecret);
-    const { _id } = user;
-    await User.findByIdAndUpdate(_id, { 
-        password 
-    });
+      const decodedToken = decodeURIComponent(token);
+      const { userId } = jwt.verify(decodedToken, passwordTokenSecret);
+      await User.findByIdAndUpdate(userId, { 
+          password 
+      });
   
     res.status(200).json('La contraseña se cambio con éxito.');
     } catch (error) {
