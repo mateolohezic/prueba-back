@@ -9,8 +9,9 @@ require('./database/db');
 
 const users = require('./routes/users');
 const photos = require('./routes/photos');
+const test = require('./routes/test');
 
-app.use('/', users, photos);
+app.use('/', users, photos, test);
 
 app.listen(port, () =>  {
     console.log(`Working on port ${port}`);

@@ -18,6 +18,7 @@ const user = new Schema({
   questionnaire1StartEnabled: Boolean,
   questionnaire1FinalEnabled: Boolean,
   dominioDirectivoTestInicial: {
+    date: String,
     estrategico: {
       question1: String,
       sectionScore: String,
