@@ -2,6 +2,7 @@ const User = require('../model/users');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 require('dotenv').config();
+const { createLog } = require('../controllers/log');
 const userTokenSecret = process.env.CLAVE_USER
 const adminTokenSecret = process.env.CLAVE_ADMIN
 
@@ -580,6 +581,7 @@ const testSection6 = async (req, res) => {
             })
             totalPoints(userId)
             verifyRanking()
+            await createLog(`${user.email} completo el test del Dominio 1: DIRECTIVO.`)
             res.status(200).send(`Se actualizo el usuario con éxito.`)
         }
     } catch (error) {

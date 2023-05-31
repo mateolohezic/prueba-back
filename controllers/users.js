@@ -2,8 +2,9 @@ const User = require('../model/users');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const nodemailer = require("nodemailer");
-const moment = require('moment');
 const bcrypt = require('bcrypt');
+const moment = require('moment');
+const { createLog } = require('../controllers/log');
 require('dotenv').config();
 const userTokenSecret = process.env.CLAVE_USER
 const adminTokenSecret = process.env.CLAVE_ADMIN
@@ -114,6 +115,8 @@ const loginUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const { id } = req.body
   if (id) {
+    const user = await User.findById(id)
+    await createLog(`${user.email} fue eliminado.`)
     await User.findByIdAndDelete(id);
     res.status(200).send(`Se elimino el usuario con éxito.`)
   } else{
@@ -133,8 +136,10 @@ const changeUserStatus = async (req, res) => {
 
       if (user.status === "active"){
         newStatus = "suspended"
+        await createLog(`El usuario ${user.email} fue suspendido.`)
       } else if (user.status === "suspended"){
         newStatus = "active"
+        await createLog(`El usuario ${user.email} fue activado.`)
       }
 
       await User.findByIdAndUpdate(id, {
@@ -368,6 +373,7 @@ const createUser = async (req, res) => {
     });
     await newUser.save();
     await sendEmailNewUser(email, password)
+    await createLog(`Se creo el usuario: ${email}.`)
     res.status(200).json(newUser);
   }
 };
