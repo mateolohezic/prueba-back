@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/StannumDev/stannum-academy-backend.git"
+    "url": "git+https://github.com/mateolohezic/prueba-back.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/StannumDev/stannum-academy-backend/issues"
+    "url": "https://github.com/mateolohezic/prueba-back/issues"
   },
-  "homepage": "https://github.com/StannumDev/stannum-academy-backend#readme",
+  "homepage": "https://github.com/mateolohezic/prueba-back#readme",
   "dependencies": {
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
@@ -28,8 +28,8 @@
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
     "mongoose": "^7.2.1",
-    "multer": "latest",
-    "multer-gridfs-storage": "latest",
+    "multer": "^1.4.2",
+    "multer-gridfs-storage": "^5.0.2",
     "nodemailer": "^6.9.2",
     "nodemon": "^2.0.22"
   }
